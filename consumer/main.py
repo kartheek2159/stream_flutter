@@ -25,6 +25,10 @@ def poll_sqs():
                     ReceiptHandle=message["ReceiptHandle"],
                 )
                 continue
-
+            if "Records" in message_body:
+                s3_record=message_body['Records'][0]['s3']
+                bucket_name=s3_record['bucket']['name']
+                s3_key=s3_record['object']['key']
+                #spin up a docker container
 
 poll_sqs()
