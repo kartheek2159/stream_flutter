@@ -117,4 +117,4 @@ class VideoTranscoder:
                 import shutil
                 shutil.rmtree(str(output_path))
 
-VideoTranscoder.process_video()
+VideoTranscoder().process_video()
