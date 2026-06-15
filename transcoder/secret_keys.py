@@ -10,3 +10,4 @@ class SecretKeys(BaseSettings):
     S3_BUCKET:str=""
     S3_KEY:str=""
     S3_PROCESSED_VIDEOS_BUCKET:str=""
+    BACKEND_URL:str=""
