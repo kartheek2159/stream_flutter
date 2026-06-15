@@ -11,6 +11,11 @@ services:
       - DATABASE_URL=postgresql://postgres:test123@db:5432/mydatabase
     volumes:
       - ./:/app
+  consumer:
+    build:
+      context: ../consumer
+      dockerfile: Dockerfile
+    container_name: consumer
   db:
     image: postgres:15
     container_name: postgres_db 
