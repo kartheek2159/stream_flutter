@@ -18,19 +18,23 @@ def get_all_videos(db:Session=Depends(get_db),user=Depends(get_current_user)):
     return all_videos
 
 @router.get("/")
-def get_video_info(video_id:str,db:Session=Depends(get_db),user=Depends(get_current_user)):
-    cache_key=f"video:{video_id}"
-    cached_data=redis_client.get(cache_key)
+def get_video_info(video_id: str, db: Session = Depends(get_db), user=Depends(get_current_user)):
+    cache_key = f"video:{video_id}"
+    cached_data = redis_client.get(cache_key)
     if cached_data:
         return json.loads(cached_data)
-    video=db.query(Video).filter(
-        Video.id==video_id,
-        Video.is_processing==ProcessingStatus.COMPLETED,
-        or_(Video.Visibility==VisibilityStatus.PUBLIC or Video.Visibility==VisibilityStatus.UNLISTED)
-    ).first()
-    redis_client.setex(cache_key,3600,json.dumps(video.to_dict()))
-    return video
 
+    video = db.query(Video).filter(
+        Video.id == video_id,
+        Video.is_processing == ProcessingStatus.COMPLETED,
+        or_(Video.Visibility == VisibilityStatus.PUBLIC, Video.Visibility == VisibilityStatus.UNLISTED)
+    ).first()
+
+    if video is None:
+        raise HTTPException(status_code=404, detail="Video not found")
+
+    redis_client.setex(cache_key, 3600, json.dumps(video.to_dict()))
+    return video
 @router.put("/")
 def update_video_by_id(id:str,db:Session=Depends(get_db)):
     video=db.query(Video).filter(Video.id==id).first()

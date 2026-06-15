@@ -61,7 +61,7 @@ def upload_metadata(
         title=metadata.title,
         description=metadata.description,
         video_s3_key=metadata.video_s3_key,
-        visibility=metadata.visibility,
+        Visibility=metadata.visibility,
         user_id=user["sub"],
     )
     db.add(new_video)
